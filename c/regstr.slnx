@@ -1,0 +1,9 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="regstr_c/regstr_c.vcxproj" Id="9cfbb497-3b13-4fb0-a125-83bfc6cc96b2" />
+  <Project Path="regstr_cpp/regstr_cpp.vcxproj" Id="59fac1b7-e1c9-4c78-a4f9-3d2c83160ba4" />
+  <Project Path="regstr_cpp2/regstr_cpp2.vcxproj" Id="95c3daba-7b03-428e-a377-626eb38fde37" />
+</Solution>

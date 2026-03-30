@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Settings Version="1">
+  <Namespace Name="Extensions">
+    <Setting Name="ExtensionRepository" Type="VT_BSTR" Value="Implicit"></Setting>
+    <Namespace Name="ExtensionRepositories">
+      <Namespace Name="RegStr Gallery">
+        <Setting Name="Id" Type="VT_BSTR" Value="1B97B855-DA44-4C9F-B50F-89B1E6402D77"></Setting>
+        <Setting Name="LocalCacheRootFolder" Type="VT_BSTR" Value="C:\regstr\Manifest"></Setting>
+        <Setting Name="IsEnabled" Type="VT_BOOL" Value="true"></Setting>
+      </Namespace>
+    </Namespace>
+  </Namespace>
+</Settings>

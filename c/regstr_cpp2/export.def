@@ -1,0 +1,7 @@
+LIBRARY regstr_cpp2
+EXPORTS
+    DebugExtensionInitialize
+    DebugExtensionUninitialize
+    DebugExtensionNotify
+    help
+    regstr

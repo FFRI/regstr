@@ -1,0 +1,5 @@
+LIBRARY regstr_cpp
+EXPORTS
+    DebugExtensionInitialize
+    help
+    regstr

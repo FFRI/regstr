@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <UseWPF>true</UseWPF>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Company>FFRI Security, Inc.</Company>
+        <Authors>FFRI Security, Inc.</Authors>
+        <Copyright>(c) FFRI Security, Inc., 2026</Copyright>
+        <PackageProjectUrl>https://github.com/FFRI/regstr</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/FFRI/regstr</RepositoryUrl>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <None Remove="Resources\regstr_16.png" />
+      <None Remove="Resources\regstr_32.png" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Resource Include="Resources\regstr_32.png" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Fluent.Ribbon" Version="11.0.2" />
+        <PackageReference Include="Microsoft.Debugging.Platform.DbgX" Version="20260112.1.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Resource Include="Resources\regstr_16.png" />
+    </ItemGroup>
+
+</Project>

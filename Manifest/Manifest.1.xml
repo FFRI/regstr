@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ExtensionPackages Version="1.0.0.0" Compression="none">
+    <ExtensionPackage>
+        <Name>regstr</Name>
+        <Version>1.0.0.0</Version>
+        <Description>A sample WinDbg extension.</Description>
+        <Components>
+            <BinaryComponent Name="regstr_cpp" Type="Engine">
+                <Files>
+                    <File Architecture="amd64" Module="..\regstr_cpp.dll" FilePathKind="RepositoryRelative"/>
+                </Files>
+                <EngineCommands>
+                    <EngineCommand Name="regstr">
+                        <EngineCommandItem>
+                            <Syntax><![CDATA[!regstr]]></Syntax>
+                            <Description><![CDATA[Print the string for registers.]]></Description>
+                        </EngineCommandItem>
+                    </EngineCommand>
+                </EngineCommands>
+            </BinaryComponent>
+        </Components>
+    </ExtensionPackage>
+</ExtensionPackages>

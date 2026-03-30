@@ -1,0 +1,6 @@
+LIBRARY regstr_c
+EXPORTS
+    ExtensionApiVersion
+    WinDbgExtensionDllInit
+    help
+    regstr
