@@ -1,0 +1,122 @@
+﻿<!-- (c) FFRI Security, Inc., 2026 / Author: FFRI Security, Inc. -->
+<ui:ToolWindowView
+    x:Class="CommandHistory.CommandHistoryToolWindowControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:ui="clr-namespace:DbgX.Interfaces.UI;assembly=DbgX.Interfaces"
+    xmlns:local="clr-namespace:CommandHistory"
+    mc:Ignorable="d"
+    ui:ToolWindowView.IsWindowPersisted="true"
+    d:DataContext="{d:DesignInstance local:CommandHistoryToolWindowViewModel}"
+    d:DesignHeight="450" d:DesignWidth="800">
+
+    <ui:ToolWindowView.TabTitle>
+        <ui:ToolWindowTitle
+            Title="Command History"
+            ToolTip="Records command history." />
+    </ui:ToolWindowView.TabTitle>
+
+    <ui:ToolWindowView.Resources>
+        <ContextMenu x:Key="HistoryContextMenu" x:Shared="False">
+            <MenuItem Header="Remove" Click="HistoryRemoveMenuItem_Click" />
+            <MenuItem Header="Add to Local" Click="LocalPinMenuItem_Click" />
+            <MenuItem Header="Add to Global" Click="GlobalPinMenuItem_Click" />
+        </ContextMenu>
+        <ContextMenu x:Key="LocalHistoryContextMenu" x:Shared="False">
+            <MenuItem Header="Remove" Click="LocalHistoryRemoveMenuItem_Click" />
+            <MenuItem Header="Add to Global" Click="GlobalPinMenuItem_Click" />
+        </ContextMenu>
+        <ContextMenu x:Key="GlobalHistoryContextMenu" x:Shared="False">
+            <MenuItem Header="Remove" Click="GlobalHistoryRemoveMenuItem_Click" />
+            <MenuItem Header="Add to Local" Click="LocalPinMenuItem_Click" />
+        </ContextMenu>
+    </ui:ToolWindowView.Resources>
+
+    <Grid>
+        <TabControl>
+            <TabItem Header="History">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <CheckBox Grid.Row="0" Content="Unique" ToolTip="Do not record duplicate commands" IsChecked="{Binding History.Unique}"/>
+                    <ListBox Grid.Row="1" x:Name="HistoryListBox" ItemsSource="{Binding History.CommandsView}"
+                  PreviewKeyDown="HistoryListBox_PreviewKeyDown">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" TextElement.FontFamily="Consolas">
+                                    <TextBlock Text="{Binding ViewId, StringFormat={}{0,3}}" Padding="1,0,0,0" />
+                                    <TextBlock Text="{Binding Command}" Padding="10,0,1,0" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <EventSetter Event="MouseDoubleClick" Handler="HistoryListBoxItem_MouseDoubleClick" />
+                                <EventSetter Event="PreviewMouseRightButtonDown" Handler="HistoryListBoxItem_PreviewMouseRightButtonDown" />
+                                <Setter Property="ContextMenu" Value="{StaticResource HistoryContextMenu}" />
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Local">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <CheckBox Grid.Row="0" Content="Unique" ToolTip="Do not record duplicate commands" IsChecked="{Binding LocalHistory.Unique}"/>
+                    <ListBox Grid.Row="1" x:Name="LocalHistoryListBox" ItemsSource="{Binding LocalHistory.CommandsView}"
+                  PreviewKeyDown="LocalHistoryListBox_PreviewKeyDown">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" TextElement.FontFamily="Consolas">
+                                    <TextBlock Text="{Binding ViewId, StringFormat={}{0,3}}" Padding="1,0,0,0" />
+                                    <TextBlock Text="{Binding Command}" Padding="10,0,1,0" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <EventSetter Event="MouseDoubleClick" Handler="HistoryListBoxItem_MouseDoubleClick" />
+                                <EventSetter Event="PreviewMouseRightButtonDown" Handler="HistoryListBoxItem_PreviewMouseRightButtonDown" />
+                                <Setter Property="ContextMenu" Value="{StaticResource LocalHistoryContextMenu}" />
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Global">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <CheckBox Grid.Row="0" Content="Unique" ToolTip="Do not record duplicate commands" IsChecked="{Binding GlobalUnique}"/>
+                    <ListBox Grid.Row="1" x:Name="GlobalHistoryListBox" ItemsSource="{Binding GlobalHistory.CommandsView}"
+                  PreviewKeyDown="GlobalHistoryListBox_PreviewKeyDown">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" TextElement.FontFamily="Consolas">
+                                    <TextBlock Text="{Binding ViewId, StringFormat={}{0,3}}" Padding="1,0,0,0" />
+                                    <TextBlock Text="{Binding Command}" Padding="10,0,1,0" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <EventSetter Event="MouseDoubleClick" Handler="HistoryListBoxItem_MouseDoubleClick" />
+                                <EventSetter Event="PreviewMouseRightButtonDown" Handler="HistoryListBoxItem_PreviewMouseRightButtonDown" />
+                                <Setter Property="ContextMenu" Value="{StaticResource GlobalHistoryContextMenu}" />
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</ui:ToolWindowView>

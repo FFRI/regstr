@@ -15,6 +15,6 @@ namespace RegStr;
 [RibbonTabMetadata("RegStrRibbonTab", -1000)]
 internal class RegStrRibbonTabViewModel : IDbgRibbonTab
 {
-    // RegStrRibbonTab を返す。
+    // RegStrRibbonTab を返す
     public Control Tab => new RegStrRibbonTabControl();
 }

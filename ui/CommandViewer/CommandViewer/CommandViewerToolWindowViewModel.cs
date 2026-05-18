@@ -256,7 +256,7 @@ public class CommandViewerToolWindowViewModel : INotifyPropertyChanged, IDisposa
         "wt"
     ];
 
-    // 簡易的な禁止コマンドの確認を行う。複文等には対応しない。
+    // 簡易的な禁止コマンドの確認を行う。複文等には対応しない
     private bool IsBadCommand(string command)
     {
         if (string.IsNullOrEmpty(command)) return false;

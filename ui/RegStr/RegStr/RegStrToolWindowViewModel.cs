@@ -81,7 +81,7 @@ public class RegStrToolWindowViewModel : IDbgToolWindow, INotifyPropertyChanged,
     {
         if (!_isInitialized)
         {
-            // イベントバスにハンドラーを登録
+            // イベントバスにハンドラを登録
             _eventBus?.Subscribe<TargetInitializedEventArgs>(OnTargetInitialized);
             _eventBus?.Subscribe<TargetRefreshEventArgs>(OnTargetRefresh);
             _isInitialized = true;
@@ -194,7 +194,7 @@ public class RegStrToolWindowViewModel : IDbgToolWindow, INotifyPropertyChanged,
             }
         }
 
-        // ここまで来た場合、文字列の途中で切れた可能性があるため、... を付けて続きを示唆しておく。
+        // ここまで来た場合、文字列の途中で切れた可能性があるため、... を付けて続きを示唆しておく
         ret.Append("...");
         return ret.ToString();
     }

@@ -4,22 +4,21 @@ English / [日本語](./README_ja.md)
 
 Sample WinDbg command & UI extensions.
 
-![RegStr UI extension](img/ui-regstr.png)
-
-![Command Viewer UI extension](img/cv-all.png)
+![UI extension](img/all.png)
 
 ## Features
 
 - regstr command extension: If a register value can be interpreted as an ASCII string, it also displays that string
 - RegStr UI extension: Displays register values and strings in the RegStr tool window according to the execution state
+- Command History UI extension: Retains command history, pin commands, and rerun commands
 - Command Viewer UI extension: A command execution window that updates on every step. Supports history and highlighting differences in command output
 
 ## Test environment
 
 - Windows 11
-- WinDbg 1.2601.12001.0
+- WinDbg 1.2603.20001.0
 - Windows SDK 10.0.26100.7627
-- Visual Studio 2026 18.3.2
+- Visual Studio 2026 18.5.2
 
 ## Usage
 
@@ -27,7 +26,7 @@ Sample WinDbg command & UI extensions.
 
 #### Command extension
 
-Note: Only supports debugging x64 applications.
+Note: regstr extensions support debugging x64 applications only.
 
 Note: `regstr_c.dll`, `regstr_cpp.dll`, `regstr_cpp2.dll`, and `regstr_rs.dll` have different implementations, but all provide the same functionality. If you use them, use only one of them.
 
@@ -45,7 +44,7 @@ Note: Operation is not guaranteed on WinDbg versions other than the one listed a
 
 RegStr:
 
-Note: Only supports debugging x64 applications.
+Note: RegStr extension supports debugging x64 applications only.
 
 1. Download and extract the prebuilt zip from the [Releases](https://github.com/FFRI/regstr/releases) page
 2. Create a `UIExtensions` folder under `%LOCALAPPDATA%\DBG`, and place `RegStr.dll` inside it
@@ -53,6 +52,15 @@ Note: Only supports debugging x64 applications.
 4. Debug any x64 application, and register information will be displayed in the `RegStr` window
 
 ![RegStr UI extension](img/ui-regstr.png)
+
+Command History:
+
+1. Download and extract the prebuilt zip from the [Releases](https://github.com/FFRI/regstr/releases) page
+2. Create a `UIExtensions` folder under `%LOCALAPPDATA%\DBG`, and place `CommandHistory.dll` inside it
+3. When you start WinDbg, a `Command history` button will be added to the `View` tab. Click it to open the `Command History` window
+4. Debug any application, and the command history will be displayed
+
+![Command History UI extension](img/ch.png)
 
 Command Viewer:
 
@@ -80,6 +88,11 @@ Building RegStr:
 1. Open `ui\RegStr\RegStr.slnx` in Visual Studio
 2. Build (this produces `RegStr.dll`)
 
+Building Command History:
+
+1. Open `ui\CommandHistory\CommandHistory.slnx` in Visual Studio
+2. Build (this produces `CommandHistory.dll`)
+
 Building Command Viewer:
 
 1. Open `ui\CommandViewer\CommandViewer.slnx` in Visual Studio
@@ -87,7 +100,7 @@ Building Command Viewer:
 
 ## References
 
-For implementation details, please refer to our blog post How to implement WinDbg extensions (in Japanese) [Part 1 - Command Extension](https://engineers.ffri.jp/entry/2026/03/30/000000), Part 2 (coming soon), Part 3 (coming soon).
+For implementation details, please refer to our blog post How to implement WinDbg extensions (in Japanese) [Part 1 - Command Extension](https://engineers.ffri.jp/entry/2026/03/30/000000), [Part 2 - UI Extension](https://engineers.ffri.jp/entry/2026/05/18/000000), Part 3 (coming soon).
 
 ## LICENSE
 

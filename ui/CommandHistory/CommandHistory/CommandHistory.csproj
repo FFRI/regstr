@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>DbgX.$(MSBuildProjectName)</AssemblyName>
     <Authors>FFRI Security, Inc.</Authors>
     <Company>FFRI Security, Inc.</Company>
     <Copyright>(c) FFRI Security, Inc., 2026</Copyright>
@@ -13,19 +14,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\command_viewer_16.png" />
-    <None Remove="Resources\command_viewer_32.png" />
+    <None Remove="Resources\command_history_16.png" />
+    <None Remove="Resources\command_history_32.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DiffPlex" Version="1.9.0" />
     <PackageReference Include="Fluent.Ribbon" Version="11.0.2" />
     <PackageReference Include="Microsoft.Debugging.Platform.DbgX" Version="20260320.1.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\command_viewer_16.png" />
-    <Resource Include="Resources\command_viewer_32.png" />
+    <Resource Include="Resources\command_history_16.png" />
+    <Resource Include="Resources\command_history_32.png" />
   </ItemGroup>
 
 </Project>
