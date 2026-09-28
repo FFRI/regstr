@@ -11,7 +11,7 @@
     d:DataContext="{d:DesignInstance local:CommandViewerTabButtonViewModel}"
     Header="Command viewer"
     ToolTip="Execute a command step by step."
-    LargeIcon="pack://application:,,,/CommandViewer;component/Resources/command_viewer_32.png"
-    Icon="pack://application:,,,/CommandViewer;component/Resources/command_viewer_16.png"
+    LargeIcon="pack://application:,,,/DbgX.CommandViewer;component/Resources/command_viewer_32.png"
+    Icon="pack://application:,,,/DbgX.CommandViewer;component/Resources/command_viewer_16.png"
     Size="Large"
     Command="{Binding OpenCommandViewerToolWindow}" />

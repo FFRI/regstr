@@ -43,7 +43,7 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <CheckBox Grid.Row="0" Content="Unique" ToolTip="Do not record duplicate commands" IsChecked="{Binding History.Unique}"/>
-                    <ListBox Grid.Row="1" x:Name="HistoryListBox" ItemsSource="{Binding History.CommandsView}"
+                    <ListBox Grid.Row="1" IsSynchronizedWithCurrentItem="False" x:Name="HistoryListBox" ItemsSource="{Binding History.CommandsView}"
                   PreviewKeyDown="HistoryListBox_PreviewKeyDown">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
@@ -70,7 +70,7 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <CheckBox Grid.Row="0" Content="Unique" ToolTip="Do not record duplicate commands" IsChecked="{Binding LocalHistory.Unique}"/>
-                    <ListBox Grid.Row="1" x:Name="LocalHistoryListBox" ItemsSource="{Binding LocalHistory.CommandsView}"
+                    <ListBox Grid.Row="1" IsSynchronizedWithCurrentItem="False" x:Name="LocalHistoryListBox" ItemsSource="{Binding LocalHistory.CommandsView}"
                   PreviewKeyDown="LocalHistoryListBox_PreviewKeyDown">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
@@ -97,7 +97,7 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <CheckBox Grid.Row="0" Content="Unique" ToolTip="Do not record duplicate commands" IsChecked="{Binding GlobalUnique}"/>
-                    <ListBox Grid.Row="1" x:Name="GlobalHistoryListBox" ItemsSource="{Binding GlobalHistory.CommandsView}"
+                    <ListBox Grid.Row="1" IsSynchronizedWithCurrentItem="False" x:Name="GlobalHistoryListBox" ItemsSource="{Binding GlobalHistory.CommandsView}"
                   PreviewKeyDown="GlobalHistoryListBox_PreviewKeyDown">
                         <ListBox.ItemTemplate>
                             <DataTemplate>

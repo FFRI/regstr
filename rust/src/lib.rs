@@ -25,7 +25,7 @@ const REG_NAMES: &[&str] = &[
 ];
 
 #[unsafe(no_mangle)]
-extern "C" fn DebugExtensionInitialize(
+extern "system" fn DebugExtensionInitialize(
     Version: *mut u32,
     Flags: *mut u32,
 ) -> HRESULT {
@@ -98,7 +98,7 @@ fn show_reg_str(dbg: &DebugClient, reg_name: &str) {
 
 /// regstr コマンド
 #[unsafe(no_mangle)]
-extern "C" fn regstr(
+extern "system" fn regstr(
     debug_client: *mut std::ffi::c_void,
     _args: PCSTR,
 ) -> HRESULT {
@@ -119,7 +119,7 @@ extern "C" fn regstr(
 
 /// help コマンド
 #[unsafe(no_mangle)]
-extern "C" fn help(
+extern "system" fn help(
     debug_client: *mut std::ffi::c_void,
     _args: PCSTR,
 ) -> HRESULT {

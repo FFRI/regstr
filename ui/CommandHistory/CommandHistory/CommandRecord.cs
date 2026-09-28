@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 namespace CommandHistory;
 
 // コマンドと UI 表示用の ID を持つクラス
-public record CommandRecord : INotifyPropertyChanged
+public class CommandRecord : INotifyPropertyChanged
 {
     public CommandRecord(int id, string command)
     {

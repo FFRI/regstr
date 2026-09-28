@@ -1,8 +1,10 @@
-# regstr
+# regstr - WinDbg UI Extension Samples
 
 [English](./README.md) / 日本語
 
-WinDbg コマンド拡張 & UI 拡張機能サンプル。
+WinDbg UI 拡張機能とコマンド拡張機能のサンプル集です。
+
+このリポジトリには、RegStr、Command History、Command Viewer の WinDbg UI 拡張機能と、`regstr` コマンド拡張の実装例が含まれています。
 
 ![UI extension](img/all.png)
 
@@ -16,7 +18,7 @@ WinDbg コマンド拡張 & UI 拡張機能サンプル。
 ## テスト環境
 
 - Windows 11
-- WinDbg 1.2603.20001.0
+- WinDbg 1.2603.20001.0, 1.2606.22001.0
 - Windows SDK 10.0.26100.7627
 - Visual Studio 2026 18.5.2
 
@@ -38,7 +40,7 @@ WinDbg コマンド拡張 & UI 拡張機能サンプル。
 
 起動時に自動で読み込ませたい場合、`UserExtensions` フォルダを丸ごと `%LOCALAPPDATA%\DBG\` にコピーしてください。
 
-#### UI 拡張
+#### WinDbg UI 拡張機能
 
 注) UI 拡張は上記に記載した WinDbg バージョン以外での動作は保証できません。
 
@@ -100,8 +102,8 @@ CommandViewer のビルド:
 
 ## References
 
-実装の詳細については我々のブログ記事 WinDbg 拡張機能の作り方 [1 ～ コマンド拡張編](https://engineers.ffri.jp/entry/2026/03/30/000000), [2 ～ UI 拡張編](https://engineers.ffri.jp/entry/2026/05/18/000000), 3 (後ほど公開) をご覧ください。
+WinDbg UI 拡張機能を含む実装の詳細については、我々のブログ記事「WinDbg 拡張機能の作り方」[1 ～ コマンド拡張編](https://engineers.ffri.jp/entry/2026/03/30/000000), [2 ～ UI 拡張編](https://engineers.ffri.jp/entry/2026/05/18/000000), [3 ～ 実用的な UI 拡張編](https://engineers.ffri.jp/entry/windbg_extension3)をご覧ください。
 
 ## LICENSE
 
-[Apache License, Version 2.0](./LISENCE)
+[Apache License, Version 2.0](./LICENSE)

@@ -13,6 +13,10 @@ public class CommandHistory : INotifyPropertyChanged
 {
     // コマンド履歴
     public ObservableCollection<CommandRecord?> Commands { get; } = [];
+
+    // 重複判定用
+    private readonly Dictionary<string, int> _commandByCommand = new(StringComparer.Ordinal);
+
     // 重複を排除するか？
     public bool Unique
     {
@@ -34,15 +38,22 @@ public class CommandHistory : INotifyPropertyChanged
         CommandsView.Filter = x => x != null;
     }
 
+    private void AddCommand(string command)
+    {
+        var record = new CommandRecord(Commands.Count, command);
+        Commands.Add(record);
+        IncrementCommandCount(record.Command);
+    }
+
     // コマンド履歴にコマンドを追加する。追加できなかった場合、false を返す
     public bool Add(string command)
     {
         command = command.Trim();
         if (command == "") return false;
 
-        if (Unique && Commands.Any(record => command == record?.Command)) return false;
+        if (Unique && _commandByCommand.ContainsKey(command)) return false;
 
-        Commands.Add(new CommandRecord(Commands.Count, command));
+        AddCommand(command);
         return true;
     }
 
@@ -52,19 +63,15 @@ public class CommandHistory : INotifyPropertyChanged
         command = command.Trim();
         if (command == "") return false;
 
-        if (Unique)
-        {
-            if (Commands.Any(record => command == record?.Command)) return false;
-        }
+        if (Unique && _commandByCommand.ContainsKey(command)) return false;
 
-        var trimmedCommand = command.Trim();
         output = output.Trim();
 
         var e = output.AsSpan().EnumerateLines();
         // 1 行目はエコーであるため読み飛ばす
         if (!e.MoveNext() || !e.MoveNext())
         {
-            Commands.Add(new CommandRecord(Commands.Count, command));
+            AddCommand(command);
             return true;
         }
 
@@ -77,21 +84,22 @@ public class CommandHistory : INotifyPropertyChanged
             return false;
         }
 
-        var commandName = GetCommandName(trimmedCommand);
+        var commandName = GetCommandName(command);
         // 不正な拡張コマンド名
         if (commandName.StartsWith('!') && l2.StartsWith($"{commandName[1..]} is not extension gallery command"))
         {
             return false;
         }
 
-        Commands.Add(new CommandRecord(Commands.Count, command));
+        AddCommand(command);
         return true;
     }
 
-    // 履歴を消去する
+    // 履歴を全消去する
     public void Clear()
     {
         Commands.Clear();
+        _commandByCommand.Clear();
     }
 
     // index に対応するコマンドを取得する
@@ -115,21 +123,42 @@ public class CommandHistory : INotifyPropertyChanged
     {
         if (!CheckIndex(index)) return false;
 
-        var command = Commands[index];
-        if (command == null) return false;
+        var record = Commands[index];
+        if (record == null) return false;
 
         // index を変えないために null 消去を行う
         Commands[index] = null;
-        CommandsView.Refresh();
+        DecrementCommandCount(record.Command);
         return true;
-
     }
 
-    private static string GetCommandName(string s)
+    private void IncrementCommandCount(string command)
+    {
+        _commandByCommand.TryGetValue(command, out var count);
+        _commandByCommand[command] = count + 1;
+    }
+
+    private void DecrementCommandCount(string command)
+    {
+        if (!_commandByCommand.TryGetValue(command, out var count)) return;
+
+        if (count <= 1)
+        {
+            _commandByCommand.Remove(command);
+        }
+        else
+        {
+            _commandByCommand[command] = count - 1;
+        }
+    }
+
+    // コマンドからコマンド名を取り出す
+    public static string GetCommandName(string s)
     {
         s = s.TrimStart();
         var p = s.IndexOf(' ');
-        return p == -1 ? s : s[..p];
+        var commandName = p == -1 ? s : s[..p];
+        return commandName.ToLowerInvariant();
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;

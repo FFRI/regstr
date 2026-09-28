@@ -1,8 +1,10 @@
-# regstr
+# regstr - WinDbg UI Extension Samples
 
 English / [日本語](./README_ja.md)
 
-Sample WinDbg command & UI extensions.
+Sample WinDbg UI extensions and command extensions.
+
+This repository contains practical WinDbg extension examples, including RegStr, Command History, and Command Viewer UI extensions, as well as the `regstr` command extension.
 
 ![UI extension](img/all.png)
 
@@ -16,7 +18,7 @@ Sample WinDbg command & UI extensions.
 ## Test environment
 
 - Windows 11
-- WinDbg 1.2603.20001.0
+- WinDbg 1.2603.20001.0, 1.2606.22001.0
 - Windows SDK 10.0.26100.7627
 - Visual Studio 2026 18.5.2
 
@@ -38,7 +40,7 @@ Note: `regstr_c.dll`, `regstr_cpp.dll`, `regstr_cpp2.dll`, and `regstr_rs.dll` h
 
 If you want it to be loaded automatically at startup, copy the entire `UserExtensions` folder to `%LOCALAPPDATA%\DBG\`.
 
-#### UI extension
+#### WinDbg UI extensions
 
 Note: Operation is not guaranteed on WinDbg versions other than the one listed above.
 
@@ -100,8 +102,8 @@ Building Command Viewer:
 
 ## References
 
-For implementation details, please refer to our blog post How to implement WinDbg extensions (in Japanese) [Part 1 - Command Extension](https://engineers.ffri.jp/entry/2026/03/30/000000), [Part 2 - UI Extension](https://engineers.ffri.jp/entry/2026/05/18/000000), Part 3 (coming soon).
+For implementation details, including how to create WinDbg UI extensions, please refer to our blog post *How to implement WinDbg extensions* (in Japanese): [Part 1 - Command Extension](https://engineers.ffri.jp/entry/2026/03/30/000000), [Part 2 - UI Extension](https://engineers.ffri.jp/entry/2026/05/18/000000), [Part 3 - Practical UI Extensions](https://engineers.ffri.jp/entry/windbg_extension3).
 
 ## LICENSE
 
-[Apache License, Version 2.0](./LISENCE)
+[Apache License, Version 2.0](./LICENSE)

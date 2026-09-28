@@ -10,6 +10,7 @@
     <Copyright>(c) FFRI Security, Inc., 2026</Copyright>
     <PackageProjectUrl>https://github.com/FFRI/regstr</PackageProjectUrl>
     <RepositoryUrl>https://github.com/FFRI/regstr</RepositoryUrl>
+    <AssemblyName>DbgX.$(MSBuildProjectName)</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

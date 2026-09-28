@@ -5,10 +5,9 @@ using System.ComponentModel;
 using System.ComponentModel.Composition;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using DbgX.Interfaces.Dml;
+using Windows.UI;
 using DbgX.Interfaces.Events;
 using DbgX.Interfaces.Services;
 using DbgX.Services.Console;
@@ -24,8 +23,15 @@ public class CommandViewerToolWindowViewModel : INotifyPropertyChanged, IDisposa
 
     [Import] private IDbgConsole? _console = null;
 
-    public CommandViewerToolWindowViewModel(ICompositionService? compositionService)
+    [Import(AllowDefault = true)] private CommandViewerRegistry? _registry = null;
+
+    private bool _disposed;
+
+    public string WindowId { get; }
+
+    public CommandViewerToolWindowViewModel(ICompositionService? compositionService, string windowId)
     {
+        WindowId = windowId;
         // コンストラクタで compositionService を受け取り、合成
         compositionService?.SatisfyImportsOnce(this);
         CommandInputEnterCommand = new DelegateCommand(ExecuteInputCommand);
@@ -34,6 +40,26 @@ public class CommandViewerToolWindowViewModel : INotifyPropertyChanged, IDisposa
         DeleteHistoryCommand = new DelegateCommand(DeleteHistory, DeleteHistoryCanExecute);
         _eventBus?.Subscribe<TargetInitializedEventArgs>(OnTargetInitialized);
         _eventBus?.Subscribe<TargetRefreshEventArgs>(OnTargetRefresh);
+
+        _registry?.Register(this);
+    }
+
+    // 設定を適用する
+    public void ApplySettings(CommandViewerSetting state)
+    {
+        RefreshKindMask = state.RefreshKindMask;
+        OnPropertyChanged(nameof(RefreshKindMask));
+        SelectedDiffChunkerKind = state.SelectedDiffChunkerKind;
+        IsAlwaysRecord = state.IsAlwaysRecord;
+        IsPause = state.IsPause;
+        OnPropertyChanged(nameof(IsAlwaysRecord));
+        OnPropertyChanged(nameof(IsPause));
+
+        // CommandInput は IsBadCommand を通す。保存時に検証済みのため通常は問題無い
+        CommandInput = state.CommandInput;
+        OnPropertyChanged(nameof(CommandInput));
+
+        if (!string.IsNullOrEmpty(CommandInput)) CancelAndRefreshAsync();
     }
 
     public CommandHistory History { get; set; } = new();
@@ -59,9 +85,9 @@ public class CommandViewerToolWindowViewModel : INotifyPropertyChanged, IDisposa
         }
     } = "";
 
-    private DiffResult GetDiffResult(string oldText, string newText)
+    private static DiffResult GetDiffResult(string oldText, string newText, DiffChunkerKind kind)
     {
-        return SelectedDiffChunkerKind switch
+        return kind switch
         {
             DiffChunkerKind.None => new DiffResult([], [newText], []),
             DiffChunkerKind.Char => Differ.Instance.CreateCharacterDiffs(oldText, newText, true),
@@ -71,14 +97,41 @@ public class CommandViewerToolWindowViewModel : INotifyPropertyChanged, IDisposa
         };
     }
 
+    private CancellationTokenSource? _diffCancellationTokenSource;
+
+    private void StartDiff(string oldText, string newText, DiffChunkerKind kind)
+    {
+        _diffCancellationTokenSource?.Cancel();
+        _diffCancellationTokenSource?.Dispose();
+        _diffCancellationTokenSource = new CancellationTokenSource();
+        _ = ComputeDiffAsync(oldText, newText, kind, _diffCancellationTokenSource.Token);
+    }
+
+    // 非同期的に Diff を計算
+    private async Task ComputeDiffAsync(string oldText, string newText, DiffChunkerKind kind, CancellationToken token)
+    {
+        try
+        {
+            var result = await Task.Run(() => GetDiffResult(oldText, newText, kind), token);
+            // 新しいタスクが既にあれば更新しない
+            token.ThrowIfCancellationRequested();
+            CommandOutputDiff = new DiffInfo(result, kind);
+        }
+        catch (OperationCanceledException)
+        {
+            // 何もしない
+        }
+    }
+
     public string CommandOutput
     {
         get;
         set
         {
-            CommandOutputDiff = new DiffInfo(GetDiffResult(field, value), SelectedDiffChunkerKind);
+            var oldText = field;
             field = value;
             RaiseCanExecuteChanged();
+            StartDiff(oldText, value, SelectedDiffChunkerKind);
         }
     } = "";
 
@@ -115,6 +168,9 @@ public class CommandViewerToolWindowViewModel : INotifyPropertyChanged, IDisposa
             OnPropertyChanged();
         }
     } = new(new DiffResult([], [], []), DiffChunkerKind.None);
+
+    // コマンド実行を一時停止するか？
+    public bool IsPause { get; set; } = false;
 
     // 変更が無くてもコマンド出力を記録するか？
     public bool IsAlwaysRecord { get; set; } = false;
@@ -196,7 +252,8 @@ public class CommandViewerToolWindowViewModel : INotifyPropertyChanged, IDisposa
 
     internal void CancelAndRefreshAsync()
     {
-        // ターゲットの初期化後に更新する
+        if (IsPause) return;
+
         _cancellationTokenSource?.Cancel(); // 既に更新中だった場合、前のタスクはキャンセル
         _cancellationTokenSource?.Dispose();
         _cancellationTokenSource = new CancellationTokenSource();
@@ -216,7 +273,11 @@ public class CommandViewerToolWindowViewModel : INotifyPropertyChanged, IDisposa
             }
 
             var last = History.Last();
-            CommandOutput = DmlToText(await _console.ExecuteCommandAndCaptureOutputAsync(CommandInput));
+            var output = await _console.ExecuteCommandAndCaptureOutputAsync(CommandInput);
+
+            if (cancellationToken.IsCancellationRequested) return;
+
+            CommandOutput = DmlHelper.StripDmlTags(output);
             if (IsAlwaysRecord || last != CommandOutput)
             {
                 // 常時記録状態か出力が前回と異なる場合は履歴に追加
@@ -236,11 +297,15 @@ public class CommandViewerToolWindowViewModel : INotifyPropertyChanged, IDisposa
 
     private void OnTargetInitialized(object? sender, TargetInitializedEventArgs e)
     {
+        if (_disposed) return;
+
         CancelAndRefreshAsync();
     }
 
     private void OnTargetRefresh(object? sender, TargetRefreshEventArgs e)
     {
+        if (_disposed) return;
+
         if ((e.Kinds & RefreshKindMask) != 0)
         {
             CancelAndRefreshAsync();
@@ -274,33 +339,6 @@ public class CommandViewerToolWindowViewModel : INotifyPropertyChanged, IDisposa
         return false;
     }
 
-    /// <summary>
-    /// DML 文字列からタグを除去した文字列を返す。
-    /// </summary>
-    /// <param name="s">DML 文字列</param>
-    /// <returns>タグを除去した文字列</returns>
-    private static string DmlToText(string s)
-    {
-        // パーサーを作成して DML 文字列を渡す
-        var parser = new DmlParser();
-        parser.AppendDml(s);
-        var ret = new StringBuilder(s.Length);
-        // ノードがある限り取得し続ける
-        while (parser.HasMoreNodes)
-        {
-            // 1 つノードを取り出す
-            var node = parser.ReadNode();
-            // 構文エラーの場合は元文字列を返す
-            if (node == null) return s;
-            // テキストノードでない場合は次へ
-            if (node.Type != DmlNodeType.Text) continue;
-            // テキストノードであれば追加
-            ret.Append(node.Text);
-        }
-
-        return ret.ToString();
-    }
-
     public event PropertyChangedEventHandler? PropertyChanged;
 
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
@@ -310,6 +348,23 @@ public class CommandViewerToolWindowViewModel : INotifyPropertyChanged, IDisposa
 
     public void Dispose()
     {
-        _cancellationTokenSource?.Dispose();
+        if (_disposed) return;
+
+        _disposed = true;
+
+        if (_cancellationTokenSource != null)
+        {
+            _cancellationTokenSource.Cancel();
+            _cancellationTokenSource.Dispose();
+            _cancellationTokenSource = null;
+        }
+
+        if (_eventBus != null)
+        {
+            _eventBus.Unsubscribe<TargetInitializedEventArgs>(OnTargetInitialized);
+            _eventBus.Unsubscribe<TargetRefreshEventArgs>(OnTargetRefresh);
+        }
+
+        _registry?.Unregister(this);
     }
 }

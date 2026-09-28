@@ -37,7 +37,7 @@ public class CommandHistory : INotifyPropertyChanged
         get;
         set
         {
-            if (field?.Value == value?.Value) return;
+            if (ReferenceEquals(field, value)) return;
 
             field = value;
         }

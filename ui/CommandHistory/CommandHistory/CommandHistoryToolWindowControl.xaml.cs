@@ -26,7 +26,7 @@ public partial class CommandHistoryToolWindowControl
         if (sender is not ListBoxItem item) return;
         if (item.DataContext is not CommandRecord record) return;
 
-        _ = _viewModel.ReplayCommand(record.Command);
+        _ = _viewModel.ReplayCommand(record);
         e.Handled = true;
     }
 
@@ -140,6 +140,7 @@ public partial class CommandHistoryToolWindowControl
         {
             // 要素が無い場合は選択解除
             listBox.SelectedIndex = -1;
+            return;
         }
         // 後ろにずらす
         if (listBox.SelectedIndex == listBox.Items.Count - 1)

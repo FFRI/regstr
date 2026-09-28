@@ -42,6 +42,7 @@
                      FontFamily="Consolas"
                      Text="{Binding CommandInput, UpdateSourceTrigger=LostFocus, NotifyOnSourceUpdated=True}"
                      SourceUpdated="CommandInputTextBox_OnSourceUpdated" />
+            <CheckBox Grid.Column="1" Margin="0,0,4,0" Content="Pause" IsChecked="{Binding Path=IsPause}" ToolTip="Temporarily pause command execution." />
         </Grid>
         <ScrollViewer Grid.Row="1" Margin="4,0,4,0"
                       HorizontalScrollBarVisibility="Auto"
@@ -53,34 +54,34 @@
                         <Setter Property="Margin" Value="4,0,0,0" />
                     </Style>
                 </WrapPanel.Resources>
-                <CheckBox Content="Memory"
+                <CheckBox Content="Memory" ToolTip="Run the command when memory values change."
                           IsChecked="{Binding Path=RefreshKindMask,
                                               Converter={StaticResource RefreshKindConverter},
                                               ConverterParameter={x:Static events:RefreshKind.Memory} }"/>
-                <CheckBox Content="Registers" IsChecked="{Binding Path=RefreshKindMask,
+                <CheckBox Content="Registers" ToolTip="Run the command when register values change." IsChecked="{Binding Path=RefreshKindMask,
                      Converter={StaticResource RefreshKindConverter},
                      ConverterParameter={x:Static events:RefreshKind.Registers} }"/>
                 <!-- DebuggerState を監視すると dps 等で無限ループ状態になるため、書かない -->
-                <CheckBox Content="Scope" IsChecked="{Binding Path=RefreshKindMask,
+                <CheckBox Content="Scope" ToolTip="Run the command when the scope changes." IsChecked="{Binding Path=RefreshKindMask,
                      Converter={StaticResource RefreshKindConverter},
                      ConverterParameter={x:Static events:RefreshKind.Scope} }"/>
-                <CheckBox Content="SrcSymPaths" IsChecked="{Binding Path=RefreshKindMask,
+                <CheckBox Content="SrcSymPaths" ToolTip="Run the command when the source symbol path changes." IsChecked="{Binding Path=RefreshKindMask,
                      Converter={StaticResource RefreshKindConverter},
                      ConverterParameter={x:Static events:RefreshKind.SrcSymPaths} }"/>
                 <!-- ConnectionState は OnTargetInitialized で代用できるため、書かない -->
-                <CheckBox Content="Breakpoints" IsChecked="{Binding Path=RefreshKindMask,
+                <CheckBox Content="Breakpoints" ToolTip="Run the command when the breakpoint changes." IsChecked="{Binding Path=RefreshKindMask,
                      Converter={StaticResource RefreshKindConverter},
                      ConverterParameter={x:Static events:RefreshKind.Breakpoints} }"/>
-                <CheckBox Content="EventFilters" IsChecked="{Binding Path=RefreshKindMask,
+                <CheckBox Content="EventFilters" ToolTip="Run the command when an event occurs." IsChecked="{Binding Path=RefreshKindMask,
                      Converter={StaticResource RefreshKindConverter},
                      ConverterParameter={x:Static events:RefreshKind.EventFilters} }"/>
-                <CheckBox Content="Views" IsChecked="{Binding Path=RefreshKindMask,
+                <CheckBox Content="Views" ToolTip="Run the command when the debugger data model view changes." IsChecked="{Binding Path=RefreshKindMask,
                      Converter={StaticResource RefreshKindConverter},
                      ConverterParameter={x:Static events:RefreshKind.Views} }"/>
-                <CheckBox Content="Modules" IsChecked="{Binding Path=RefreshKindMask,
+                <CheckBox Content="Modules" ToolTip="Run the command when the module changes." IsChecked="{Binding Path=RefreshKindMask,
                      Converter={StaticResource RefreshKindConverter},
                      ConverterParameter={x:Static events:RefreshKind.Modules} }"/>
-                <CheckBox Content="StepFilters" IsChecked="{Binding Path=RefreshKindMask,
+                <CheckBox Content="StepFilters" ToolTip="Run the command when the step filter changes." IsChecked="{Binding Path=RefreshKindMask,
                      Converter={StaticResource RefreshKindConverter},
                      ConverterParameter={x:Static events:RefreshKind.StepFilters} }"/>
             </WrapPanel>

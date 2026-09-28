@@ -44,8 +44,6 @@ public class RestoreCommandHistoryDataOptionHandler : TargetOptionHandler<Restor
         // ローカル履歴があれば復元
         foreach (var command in option.Local)
         {
-            if (!_viewModel.CheckCommandBefore(command)) continue;
-
             _viewModel.LocalHistory.Add(command);
         }
 

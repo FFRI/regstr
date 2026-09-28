@@ -4,13 +4,14 @@
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
+using DbgX.Interfaces;
 
 namespace CommandViewer;
 
 /// <summary>
 /// CommandViewerToolWindowControl.xaml の相互作用ロジック
 /// </summary>
-public partial class CommandViewerToolWindowControl
+public partial class CommandViewerToolWindowControl : IDbgNotifyTabClosed
 {
     private bool _isCommandOutputTextBoxView;
     private readonly CommandViewerToolWindowViewModel _viewModel;
@@ -36,6 +37,7 @@ public partial class CommandViewerToolWindowControl
         CommandOutputTextBox.CaretIndex = 0;
         _isCommandOutputTextBoxView = false;
     }
+
     private void SwitchToTextBox()
     {
         if (_isCommandOutputTextBoxView) return;
@@ -55,5 +57,13 @@ public partial class CommandViewerToolWindowControl
     private void CommandInputTextBox_OnSourceUpdated(object? sender, DataTransferEventArgs e)
     {
         _viewModel.CancelAndRefreshAsync();
+    }
+
+    public bool OnTabClosed()
+    {
+        _viewModel.Dispose();
+        DataContext = null;
+
+        return true;
     }
 }

@@ -5,6 +5,7 @@ using System.ComponentModel.Composition;
 using System.IO;
 using System.Windows;
 using DbgX.Interfaces;
+using DbgX.Interfaces.UI;
 
 namespace CommandViewer;
 
@@ -16,9 +17,19 @@ public class CommandViewerToolWindow : IDbgToolWindow
 
     public FrameworkElement? GetToolWindowView(object parameter)
     {
+        // ウィンドウ毎に固有のウィンドウ ID を作成
+        var windowId = parameter as string;
+        if (string.IsNullOrEmpty(windowId)) windowId = Guid.NewGuid().ToString("N");
+
         try
         {
-            return new CommandViewerToolWindowControl(new CommandViewerToolWindowViewModel(_compositionService));
+            var control = new CommandViewerToolWindowControl(new CommandViewerToolWindowViewModel(_compositionService, windowId));
+
+            // ウィンドウ ID を永続的に保持し、設定の復元で使用する
+            ToolWindowView.SetPersistedWindowSettings(control, windowId);
+            ToolWindowView.SetIsWindowPersisted(control, true);
+
+            return control;
         }
         catch (FileNotFoundException e)
         {
